@@ -1,0 +1,17 @@
+Push 1
+Push 8
+ToMem 99
+:label
+Mult
+FromMem 99
+Push 1
+Sub
+ToMem 99
+Push 0
+Cmp
+Pop
+Print
+JNE label
+Pop
+Print
+quit

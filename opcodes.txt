@@ -1,0 +1,33 @@
+NOP  	 	no operation
+PUSH		push to stack the value. it's 4+4 = 8 bytes length command
+POP	        delete element from stack
+PRINT		print the top value from stack on screen
+ADD             adds two top values from stack, and replaces them with the result
+SUB             substracts the top value from the next, replaces them with the result
+MULT 
+DIVIDE
+QUIT
+JMP 	        unconditional jump to specified address. 8 bytes length command
+CMP             comparison two top values. this command only affects the flags
+JE              jump if equal flag is set. all j*-commands are 8 bytes length
+JL              jump if greater flag is not set, and equal flag is not set
+JG              jump if greater flag is set
+JNE             jump if equal flag is not set
+JLE
+JGE
+FROMMEM         value on address defined by next 4 bytes moves to stack. 8-bytes command
+TOMEM           value on stack moves to address defined by next 4 bytes. 8-bytes command
+RFROMMEM        value on address defined by top of stack moves to stack
+RTOMEM          value on stack moves on address defined by top-1 stack value
+CALL  		calls label like function. 8 bytes length
+RET 		return control from function
+DUP 		duplicates x values on stack where x is argument. 8 bytes. a,b,c -> a,b,c,a,b,c (dup 3)
+RANDINT 	places on stack random positive integer
+SWAP		swaps 2 values on stack. a,b -> b,a
+INC		increments value on stack
+DEC		decrements value on stack
+AFROMMEM	value on address defined by (next 4 bytes + value on stack) top moves to stack. 8 bytes
+ATOMEM		value on stack moves to address defined by (next 4 bytes + top-1 stack value). 8 bytes
+BP		breakpoint. prints some info, stack and waits pressing enter to continue.
+
+

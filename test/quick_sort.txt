@@ -1,0 +1,176 @@
+# quick sort
+
+# size of array have to be defined TWICE!
+var array 3000
+
+# global variable for store array[m] value.
+# any call of :sort overwrites this variable
+var val_mid
+
+# global variable to simplify swap
+var temp
+
+var size_of_array
+# HERE the second definition
+push 3000
+tomem size_of_array
+pop
+
+push 0
+:gen_loop
+	randint
+	atomem array
+	pop
+	frommem size_of_array
+	dec
+	cmp
+	pop
+	je :gen_end
+	inc
+	jmp :gen_loop
+:gen_end
+pop
+
+
+call output
+push 0
+frommem size_of_array
+dec		low high
+call sort
+
+
+push 0
+print
+pop
+call output
+quit
+
+# procedure sort(var ar: array of real; low, high: integer);
+#  var i, j: integer;
+#      m, wsp: real;
+#  begin
+#      i:=low; j:=high; m:=ar[(i+j) div 2];
+#      repeat
+#        while ar[i]<m do Inc(i);
+#        while ar[j]>m do Dec(j);
+#        if i<=j then begin
+#          wsp:=ar[i]; ar[i]:=ar[j]; ar[j]:=wsp;
+#          Inc(i); Dec(j);
+#         end;
+#      until i>j;
+#      if low<j then sort(ar, low, j);
+#      if i<high then sort(ar, i, high);
+#  end;
+
+# also qsort in forth: http://www.automatones.net/forth/wiki/index.php?title=Quicksort
+
+:store_mid		i j
+add
+push 2
+divide			m
+afrommem array		m array[m]
+tomem val_mid
+pop
+pop
+ret
+
+
+:exch		a1 a2
+afrommem array	a1 a2 array[a2]
+tomem temp
+pop		a1 a2
+swap		a2 a1
+afrommem array	a2 a1 array[a1]
+swap		a2 array[a1] a1
+frommem temp	a2 array[a1] a1 array[a2]
+atomem array
+pop
+pop
+atomem array
+pop
+pop
+ret
+
+
+:sort		low high
+dup 2		low high i j
+# below I will not specify 'low' and 'high' at the stack on every operation to reduce comments length.
+dup 2		i j i j		really: low high i j i j
+call store_mid	i j 		now value array[i+j/2] saved as global variable mid
+:main_cycle
+	swap		j i
+	:i_cycle
+		afrommem array	j i array[i]
+		frommem val_mid	j i array[i] array[m]
+		cmp
+		pop
+		pop		j i
+		jge end_i_cycle		jge: ascending, jle: descending. also change below
+		inc		j i+1
+		jmp i_cycle
+	:end_i_cycle
+	swap	i j
+	:j_cycle
+		afrommem array	i j array[j]
+		frommem val_mid	i j array[j] array[m]
+		cmp
+		pop
+		pop		i j
+		jle end_j_cycle		jle: ascending, jge: descending. also change above
+		dec		i j-1
+		jmp j_cycle
+	:end_j_cycle
+	cmp		i j
+	jg not_swap
+		dup 2		i j i j
+		call exch	i j
+		dec		i j-1
+		swap		j-1 i
+		inc		j-1 i+1
+		swap		i+1 j-1
+	:not_swap
+	cmp
+	jle :main_cycle
+# as you remember, values 'low' and 'high' still at stack
+#	low high i j
+dup 4	low high i j low high i j
+pop
+pop
+pop	low high i j low
+swap	low high i low j
+cmp
+jge do_not_call_1
+	call sort	low high i
+	jmp call_2
+:do_not_call_1
+	pop 
+	pop		low high i
+:call_2
+swap		low i high
+cmp
+jge do_not_call_2
+	call sort	low
+	pop
+	ret
+:do_not_call_2
+	pop
+	pop
+	pop
+	ret
+
+:output
+push 0
+:output_loop
+	afrommem array
+	print
+	pop
+	frommem size_of_array
+	dec
+	cmp
+	pop
+	je :output_end
+	inc
+	jmp :output_loop
+:output_end
+pop
+ret

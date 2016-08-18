@@ -1,0 +1,18 @@
+push 8
+call fack
+print
+quit
+
+:fack
+push 1
+cmp
+pop
+je label
+dup
+push 1
+sub
+call fack
+mult
+ret
+:label
+ret

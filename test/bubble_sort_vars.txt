@@ -1,0 +1,114 @@
+# bubble sort
+
+# size of array have to be defined TWICE!
+var array 3000
+var size_of_array
+
+# HERE the second definition
+push 3000
+tomem size_of_array
+pop
+
+push 0
+:gen_loop
+	randint
+	atomem array
+	pop
+	frommem size_of_array
+	dec
+	cmp
+	je :gen_end
+	pop
+	inc
+	jmp :gen_loop
+:gen_end
+pop
+call output
+call sort
+push 0
+print
+pop
+call output
+quit
+
+# wikipedia:
+# for(int i = 0; i < a.length; i++)
+#     for(int j = 0; j < a.length - i - 1; j++)
+#         if(a[j] > a[j + 1])
+#             swap(a[j], a[j + 1]);
+
+:sort
+push 0		i
+:s_o_loop
+	# outer loop
+	frommem size_of_array
+	dec
+	cmp
+	je :sort_end
+	pop
+	push 0		i j
+	:s_i_loop
+		# inner loop
+		dup 2			i j i j
+		frommem size_of_array	i j i j size
+		dec
+		swap			i j i size j
+		sub			i j i size-j
+		cmp
+		pop
+		pop		i j
+		je :s_i_end
+		dup 1		i j j
+		afrommem array	i j j x
+		swap		i j x j
+		inc		i j x j+1
+		afrommem array	i j x j+1 x'
+		swap		i j x x' j+1
+		pop		i j x x'
+		cmp
+		jle :cont
+			# swap values in memory
+			pop		i j x
+			swap		i x j
+			inc		i x j+1
+			afrommem array	i x j+1 x'
+			swap		i x x' j+1
+			dec		i x x' j
+			swap		i x j x'
+			atomem array
+			pop		i x j
+			inc		i x j+1
+			swap		i j+1 x
+			atomem array
+			pop		i j+1
+			jmp s_i_loop
+		:cont
+		pop
+		pop	i j
+		inc	i j+1
+		jmp s_i_loop	
+	:s_i_end
+	pop	i
+	inc	i+1
+	jmp s_o_loop
+:sort_end
+pop
+ret
+
+:output
+push 0
+:output_loop
+	afrommem array
+	print
+	pop
+	frommem size_of_array
+	dec
+	cmp
+	je :output_end
+	pop
+	inc
+	jmp :output_loop
+:output_end
+pop
+ret
+
