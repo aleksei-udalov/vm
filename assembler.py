@@ -50,9 +50,11 @@ class Var():
     def __init__(self, size):
         self.links = []
         self.size = size
+
     def set_links(self, bytecode):
         for link in self.links:
             bytecode[link] = len(bytecode) // command_length
+
     def allocate_space(self, bytecode):
         for x in range(self.size):
             bytecode.append(0)
